@@ -1,0 +1,10 @@
+{
+  "name": "SpeakPal — Coach d'anglais IA",
+  "short_name": "SpeakPal",
+  "description": "Pratiquez l'anglais en conversant avec un coach IA, avec corrections en temps réel.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0f1222",
+  "theme_color": "#0f1222",
+  "lang": "fr"
+}
