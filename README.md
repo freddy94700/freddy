@@ -20,7 +20,8 @@ pratiquer l'anglais en parlant (ou en écrivant) avec un coach IA, avec correcti
 - 🌐 **Mode en ligne (LLM) prioritaire** : dès qu'une clé API est renseignée, le coach LLM est utilisé (badge 🟢 en ligne / ⚪ hors-ligne) avec repli automatique sur le moteur hors-ligne
 - 🤖 **Deux moteurs de coach** :
   - hors-ligne (règles intégrées, fonctionne sans clé API)
-  - LLM via n'importe quel endpoint compatible OpenAI (clé stockée localement uniquement)
+  - LLM en ligne, **préconfiguré Mistral** (`https://api.mistral.ai/v1/chat/completions`, `mistral-small-latest`) ; préréglages OpenAI / OpenRouter / personnalisé. La clé est saisie dans l'app et stockée localement uniquement (jamais embarquée dans le build)
+- 🚀 **Déploiement GitHub Pages** automatique sur `master` (`.github/workflows/pages.yml`) — activer « Source: GitHub Actions » dans les réglages Pages du dépôt
 
 ## Lancer le projet
 

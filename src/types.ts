@@ -107,6 +107,12 @@ export const DEFAULT_SETTINGS: Settings = {
   sound: true,
   mode: 'llm',
   apiKey: '',
-  endpoint: 'https://api.openai.com/v1/chat/completions',
-  model: 'gpt-4o-mini',
+  endpoint: 'https://api.mistral.ai/v1/chat/completions',
+  model: 'mistral-small-latest',
+}
+
+export const PROVIDERS: Record<string, { label: string; endpoint: string; model: string }> = {
+  mistral: { label: 'Mistral AI (par défaut)', endpoint: 'https://api.mistral.ai/v1/chat/completions', model: 'mistral-small-latest' },
+  openai: { label: 'OpenAI', endpoint: 'https://api.openai.com/v1/chat/completions', model: 'gpt-4o-mini' },
+  openrouter: { label: 'OpenRouter', endpoint: 'https://openrouter.ai/api/v1/chat/completions', model: 'mistralai/mistral-small' },
 }

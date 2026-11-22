@@ -1,4 +1,4 @@
-import { AppState, CoachMode } from '../types'
+import { AppState, CoachMode, PROVIDERS } from '../types'
 import { currentStreak, masteryScore, masteryTrend, weekProgress, WEEKLY_GOAL } from '../storage'
 
 interface Props {
@@ -6,6 +6,13 @@ interface Props {
   onChange: (patch: Partial<AppState>) => void
   onBack: () => void
   onReset: () => void
+}
+
+function providerKey(s: AppState['settings']): string {
+  const hit = Object.entries(PROVIDERS).find(
+    ([, p]) => p.endpoint === s.endpoint && p.model === s.model,
+  )
+  return hit ? hit[0] : 'custom'
 }
 
 export default function Progress({ state, onChange, onBack, onReset }: Props) {
@@ -55,6 +62,23 @@ export default function Progress({ state, onChange, onBack, onReset }: Props) {
 
       <h2>Coach IA</h2>
       <div className="settings-card">
+        <label>
+          Fournisseur (préréglage)
+          <select
+            value={providerKey(s)}
+            onChange={(e) => {
+              const p = PROVIDERS[e.target.value]
+              if (p) setSettings({ endpoint: p.endpoint, model: p.model })
+            }}
+          >
+            {Object.entries(PROVIDERS).map(([k, p]) => (
+              <option key={k} value={k}>
+                {p.label}
+              </option>
+            ))}
+            <option value="custom">Personnalisé</option>
+          </select>
+        </label>
         <label>
           Mode du coach
           <select value={s.mode} onChange={(e) => setSettings({ mode: e.target.value as CoachMode })}>
