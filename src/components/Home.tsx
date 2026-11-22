@@ -3,6 +3,7 @@ import { canStartSession, currentStreak, FREE_SESSIONS_PER_DAY, masteryScore, se
 import { SCENARIOS } from '../scenarios'
 import { TOPICS } from '../topics'
 import { isOnlineCoach } from '../coach'
+import { avatarOf } from '../types'
 
 export interface SessionChoice {
   kind: 'topic' | 'scenario'
@@ -50,6 +51,7 @@ export default function Home({ state, onStart }: Props) {
   const today = sessionsOn(state, now).length
   const free = canStartSession(state, now)
   const recent = [...state.sessions].sort((a, b) => b.startedAt - a.startedAt).slice(0, 3)
+  const avatar = avatarOf(state.profile?.avatar)
 
   return (
     <div className="screen home">
@@ -59,6 +61,12 @@ export default function Home({ state, onStart }: Props) {
           <h1>SpeakPal</h1>
         </div>
         <div className="header-badges">
+          <span className="coach-chip" title={`Ton coach : ${avatar.name}`}>
+            <span className="avatar xs" style={{ background: avatar.color }}>
+              {avatar.emoji}
+            </span>
+            {avatar.name}
+          </span>
           <span className={`net ${isOnlineCoach(state.settings) ? 'on' : 'off'}`}>
             {isOnlineCoach(state.settings) ? '🟢 LLM en ligne' : '⚪ hors-ligne'}
           </span>

@@ -1,4 +1,6 @@
 import { AppState, CoachMode, PROVIDERS } from '../types'
+import AvatarPicker from './AvatarPicker'
+import LevelPicker from './LevelPicker'
 import { currentStreak, masteryScore, masteryTrend, weekProgress, WEEKLY_GOAL } from '../storage'
 
 interface Props {
@@ -58,6 +60,20 @@ export default function Progress({ state, onChange, onBack, onReset }: Props) {
             <span className="chart-val">{t.score}</span>
           </div>
         ))}
+      </div>
+
+      <h2>Mon profil</h2>
+      <div className="settings-card">
+        <label>Coach</label>
+        <AvatarPicker
+          value={state.profile?.avatar ?? 'female'}
+          onChange={(avatar) => state.profile && onChange({ profile: { ...state.profile, avatar } })}
+        />
+        <label>Niveau d'anglais (modifiable à tout moment)</label>
+        <LevelPicker
+          value={state.profile?.level ?? 'B1'}
+          onChange={(level) => state.profile && onChange({ profile: { ...state.profile, level } })}
+        />
       </div>
 
       <h2>Coach IA</h2>
