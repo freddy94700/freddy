@@ -9,8 +9,11 @@ export function loadState(): AppState {
       return { profile: null, premium: true, sessions: [], settings: { ...DEFAULT_SETTINGS } }
     }
     const parsed = JSON.parse(raw) as AppState
+    const profile = parsed.profile
+      ? { ...parsed.profile, avatar: parsed.profile.avatar ?? ('female' as const) }
+      : null
     return {
-      profile: parsed.profile ?? null,
+      profile,
       premium: parsed.premium ?? true,
       sessions: parsed.sessions ?? [],
       settings: { ...DEFAULT_SETTINGS, ...(parsed.settings ?? {}) },

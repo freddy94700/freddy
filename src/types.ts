@@ -48,6 +48,7 @@ export interface CoachResponse {
 export interface SessionContext {
   level: Level
   interests: string[]
+  personaName: string
   kind: 'topic' | 'scenario'
   topic?: string
   scenarioId?: string
@@ -80,9 +81,28 @@ export interface SessionRecord {
   label: string
 }
 
+export type AvatarId = 'female' | 'male'
+
+export interface Avatar {
+  id: AvatarId
+  name: string
+  emoji: string
+  color: string
+}
+
+export const AVATARS: Avatar[] = [
+  { id: 'female', name: 'Léa', emoji: '👩‍🏫', color: '#ff8fb3' },
+  { id: 'male', name: 'Marc', emoji: '👨‍🏫', color: '#6c8cff' },
+]
+
+export function avatarOf(id: AvatarId | undefined): Avatar {
+  return AVATARS.find((a) => a.id === id) ?? AVATARS[0]
+}
+
 export interface Profile {
   level: Level
   interests: string[]
+  avatar: AvatarId
   createdAt: number
 }
 

@@ -59,12 +59,13 @@ export class LocalCoach implements CoachEngine {
     const topic = this.topic ?? this.pickTopicFromInterests(ctx)
     this.topic = topic
     const starter = this.pick(topic.starters[band])
+    const name = ctx.personaName || 'your English coach'
     const opening =
       ctx.level === 'A1' || ctx.level === 'A2'
-        ? { en: "Hi! I'm your English coach. Let's chat! ", fr: "Salut ! Je suis ton coach d'anglais. Discutons ! " }
+        ? { en: `Hi! I'm ${name}, your English coach. Let's chat! `, fr: `Salut ! Je suis ${name}, ton coach d'anglais. Discutons ! ` }
         : ctx.level === 'B1' || ctx.level === 'B2'
-          ? { en: "Hey, great to see you! Ready for a chat? ", fr: "Salut, ravi de te voir ! Prêt(e) pour discuter ? " }
-          : { en: "Hey! Great to have you here. Shall we dive into something interesting? ", fr: "Salut ! Ravi de t'avoir ici. On plonge dans quelque chose d'intéressant ? " }
+          ? { en: `Hey, great to see you! I'm ${name}. Ready for a chat? `, fr: `Salut, ravi de te voir ! Je suis ${name}. Prêt(e) pour discuter ? ` }
+          : { en: `Hey! Great to have you here, I'm ${name}. Shall we dive into something interesting? `, fr: `Salut ! Ravi de t'avoir ici, je suis ${name}. On plonge dans quelque chose d'intéressant ? ` }
     return Promise.resolve({
       reply: opening.en + starter.en,
       replyFr: opening.fr + starter.fr,

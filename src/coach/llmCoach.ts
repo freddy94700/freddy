@@ -6,8 +6,8 @@ interface LlmSettings {
   model: string
 }
 
-function systemPrompt(level: string): string {
-  return `You are Alex, a warm, patient and encouraging AI English conversation coach for a French-speaking learner at CEFR level ${level}.
+function systemPrompt(level: string, personaName: string): string {
+  return `You are ${personaName}, a warm, patient and encouraging AI English conversation coach for a French-speaking learner at CEFR level ${level}.
 Rules:
 - "reply" must be ONLY in English, natural and conversational, 1 to 3 sentences, adapted to level ${level}. Ask a follow-up question to keep the conversation going.
 - If the learner writes in French or mixes French words, gently give the English word(s) inside your reply.
@@ -31,7 +31,7 @@ function extractJson(text: string): string {
 export class LlmCoach implements CoachEngine {
   constructor(private settings: LlmSettings, private fallback: CoachEngine) {}
 
-  private async call(messages: { role: string; content: string }[], level: string): Promise<CoachResponse & { userFr?: string }> {
+  private async call(messages: { role: string; content: string }[], level: string, personaName: string): Promise<CoachResponse & { userFr?: string }> {
     const res = await fetch(this.settings.endpoint, {
       method: 'POST',
       headers: {
@@ -40,7 +40,7 @@ export class LlmCoach implements CoachEngine {
       },
       body: JSON.stringify({
         model: this.settings.model,
-        messages: [{ role: 'system', content: systemPrompt(level) }, ...messages],
+        messages: [{ role: 'system', content: systemPrompt(level, personaName) }, ...messages],
         temperature: 0.7,
         response_format: { type: 'json_object' },
       }),
@@ -77,6 +77,7 @@ export class LlmCoach implements CoachEngine {
       const r = await this.call(
         [{ role: 'user', content: `Start a brand new conversation session with me about: ${topic}. Greet me warmly in English (level ${ctx.level}) and ask me an opening question. corrections must be an empty array.` }],
         ctx.level,
+        ctx.personaName || 'Alex',
       )
       return { reply: r.reply, replyFr: r.replyFr, corrections: [], score: 100 }
     } catch {
@@ -90,7 +91,7 @@ export class LlmCoach implements CoachEngine {
         role: m.role === 'user' ? 'user' : 'assistant',
         content: m.role === 'user' ? m.text : m.text,
       }))
-      const r = await this.call([...history, { role: 'user', content: userText }], ctx.level)
+      const r = await this.call([...history, { role: 'user', content: userText }], ctx.level, ctx.personaName || 'Alex')
       if (r.userFr) {
         const lastUser = [...ctx.history].reverse().find((m) => m.role === 'user')
         if (lastUser) lastUser.textFr = r.userFr

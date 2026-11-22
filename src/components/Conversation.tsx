@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createCoach, isOnlineCoach } from '../coach'
 import { recognitionSupported, speak, startRecognition, stopSpeaking, RecognitionHandle, ttsSupported } from '../speech'
-import { AppState, ChatMessage, SessionContext, SessionSummary, Settings } from '../types'
+import { AppState, ChatMessage, SessionContext, SessionSummary, Settings, avatarOf } from '../types'
 import { CATEGORY_LABELS } from '../types'
 import { uid } from '../storage'
 
@@ -39,9 +39,12 @@ export default function Conversation({ state, session, onEnd }: Props) {
     setMessages(messagesRef.current)
   }
 
+  const avatar = avatarOf(state.profile!.avatar)
+
   const baseCtx = (): SessionContext => ({
     level: state.profile!.level,
     interests: state.profile!.interests,
+    personaName: avatar.name,
     kind: session.kind,
     topic: session.topic,
     scenarioId: session.scenarioId,
@@ -140,12 +143,17 @@ export default function Conversation({ state, session, onEnd }: Props) {
   return (
     <div className="screen conversation">
       <header className="conv-header">
-        <div>
-          <strong>{session.kind === 'scenario' ? '🎭' : '💬'} {session.label}</strong>
-          <span className="timer">⏱ {fmt(elapsed)}</span>
-          <span className={`net ${isOnlineCoach(settings) ? 'on' : 'off'}`}>
-            {isOnlineCoach(settings) ? '🟢 Coach IA en ligne (LLM)' : '⚪ Coach hors-ligne'}
+        <div className="conv-title">
+          <span className="avatar" style={{ background: avatar.color }}>
+            {avatar.emoji}
           </span>
+          <div>
+            <strong>{avatar.name} · {session.kind === 'scenario' ? '🎭' : '💬'} {session.label}</strong>
+            <span className="timer">⏱ {fmt(elapsed)}</span>
+            <span className={`net ${isOnlineCoach(settings) ? 'on' : 'off'}`}>
+              {isOnlineCoach(settings) ? '🟢 IA en ligne (LLM)' : '⚪ hors-ligne'}
+            </span>
+          </div>
         </div>
         <div className="header-actions">
           <button className={`mini ${showFr ? 'on' : ''}`} onClick={() => setShowFr((v) => !v)} title="Traduction française">
@@ -159,35 +167,42 @@ export default function Conversation({ state, session, onEnd }: Props) {
 
       <div className="messages">
         {messages.map((m) => (
-          <div key={m.id} className={`bubble ${m.role}`}>
-            <p>{m.text}</p>
-            {m.role === 'coach' && showFr && m.textFr && <p className="fr">{m.textFr}</p>}
-            {m.role === 'user' && (
-              <div className="user-meta">
+          <div key={m.id} className={`bubble-row ${m.role}`}>
+            {m.role === 'coach' && (
+              <span className="avatar sm" style={{ background: avatar.color }} title={avatar.name}>
+                {avatar.emoji}
+              </span>
+            )}
+            <div className={`bubble ${m.role}`}>
+              <p>{m.text}</p>
+              {m.role === 'coach' && showFr && m.textFr && <p className="fr">{m.textFr}</p>}
+              {m.role === 'user' && (
+                <div className="user-meta">
                 {typeof m.score === 'number' && (
                   <span className={`score-badge ${m.score >= 80 ? 'good' : m.score >= 50 ? 'mid' : 'bad'}`}>{m.score}/100</span>
                 )}
-                {m.corrections && m.corrections.length > 0 && (
-                  <details className="corrections">
-                    <summary>
-                      ✏️ {m.corrections.filter((c) => c.severity === 'error').length} correction(s),{' '}
-                      {m.corrections.filter((c) => c.severity === 'tip').length} astuce(s)
-                    </summary>
-                    <ul>
-                      {m.corrections.map((c, i) => (
-                        <li key={i} className={c.severity}>
-                          <span className="cat">{CATEGORY_LABELS[c.category]}</span>
-                          <div className="corr-line">
-                            <s>{c.original}</s> → <strong>{c.corrected}</strong>
-                          </div>
-                          <p className="expl">{c.explanation}</p>
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
-                )}
-              </div>
-            )}
+                  {m.corrections && m.corrections.length > 0 && (
+                    <details className="corrections">
+                      <summary>
+                        ✏️ {m.corrections.filter((c) => c.severity === 'error').length} correction(s),{' '}
+                        {m.corrections.filter((c) => c.severity === 'tip').length} astuce(s)
+                      </summary>
+                      <ul>
+                        {m.corrections.map((c, i) => (
+                          <li key={i} className={c.severity}>
+                            <span className="cat">{CATEGORY_LABELS[c.category]}</span>
+                            <div className="corr-line">
+                              <s>{c.original}</s> → <strong>{c.corrected}</strong>
+                            </div>
+                            <p className="expl">{c.explanation}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         ))}
         {busy && <div className="bubble coach typing">Le coach réfléchit…</div>}

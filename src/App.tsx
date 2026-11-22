@@ -6,7 +6,7 @@ import PremiumModal from './components/PremiumModal'
 import Progress from './components/Progress'
 import Review from './components/Review'
 import { loadState, saveState, uid, canStartSession } from './storage'
-import { AppState, ChatMessage, Level, SessionRecord, SessionSummary } from './types'
+import { AppState, AvatarId, ChatMessage, Level, SessionRecord, SessionSummary } from './types'
 
 type Screen = 'home' | 'conversation' | 'review' | 'progress'
 
@@ -25,8 +25,8 @@ export default function App() {
     })
   }
 
-  const handleDoneOnboarding = (level: Level, interests: string[]) => {
-    update({ profile: { level, interests, createdAt: Date.now() } })
+  const handleDoneOnboarding = (level: Level, interests: string[], avatar: AvatarId) => {
+    update({ profile: { level, interests, avatar, createdAt: Date.now() } })
     setScreen('home')
   }
 
