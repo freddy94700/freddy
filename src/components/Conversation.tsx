@@ -3,6 +3,7 @@ import { createCoach, isOnlineCoach } from '../coach'
 import { recognitionSupported, speak, startRecognition, stopSpeaking, RecognitionHandle, ttsSupported } from '../speech'
 import { AppState, ChatMessage, SessionContext, SessionSummary, Settings, avatarOf } from '../types'
 import { CATEGORY_LABELS } from '../types'
+import AvatarFace from './AvatarFace'
 import { uid } from '../storage'
 
 export interface ActiveSession {
@@ -30,6 +31,8 @@ export default function Conversation({ state, session, onEnd }: Props) {
   const [micError, setMicError] = useState<string | null>(null)
   const [showFr, setShowFr] = useState(false)
   const [elapsed, setElapsed] = useState(0)
+  const [speaking, setSpeaking] = useState(false)
+  const [mood, setMood] = useState<'neutral' | 'happy'>('neutral')
   const recRef = useRef<RecognitionHandle | null>(null)
   const startedRef = useRef(Date.now())
   const endedRef = useRef(false)
@@ -56,7 +59,9 @@ export default function Conversation({ state, session, onEnd }: Props) {
     engine.startSession(baseCtx()).then((res) => {
       if (cancelled) return
       push([{ id: uid(), role: 'coach', text: res.reply, textFr: res.replyFr, ts: Date.now() }])
-      if (settings.sound) speak(res.reply)
+      if (settings.sound) {
+        speak(res.reply, { onStart: () => setSpeaking(true), onEnd: () => setSpeaking(false) })
+      }
     })
     return () => {
       cancelled = true
@@ -95,7 +100,13 @@ export default function Conversation({ state, session, onEnd }: Props) {
         ts: Date.now(),
       }
       push([userMsg, coachMsg])
-      if (settings.sound) speak(res.reply)
+      if (res.score >= 80) {
+        setMood('happy')
+        setTimeout(() => setMood('neutral'), 5000)
+      }
+      if (settings.sound) {
+        speak(res.reply, { onStart: () => setSpeaking(true), onEnd: () => setSpeaking(false) })
+      }
     } finally {
       setBusy(false)
     }
@@ -134,6 +145,7 @@ export default function Conversation({ state, session, onEnd }: Props) {
     endedRef.current = true
     recRef.current?.stop()
     stopSpeaking()
+    setSpeaking(false)
     const summary = engine.endSession(messagesRef.current)
     onEnd(messagesRef.current, summary)
   }
@@ -164,6 +176,24 @@ export default function Conversation({ state, session, onEnd }: Props) {
           </button>
         </div>
       </header>
+
+      <div className="video-panel">
+        <div className="video-frame">
+          <AvatarFace avatar={avatar} speaking={speaking} mood={mood} size={132} />
+          <div className="video-overlay">
+            <span className={`live-dot ${isOnlineCoach(settings) || speaking ? 'on' : ''}`} />
+            EN DIRECT · {avatar.name}
+          </div>
+          {speaking && (
+            <div className="eq" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+            </div>
+          )}
+          {busy && !speaking && <div className="video-thinking">…</div>}
+        </div>
+      </div>
 
       <div className="messages">
         {messages.map((m) => (
