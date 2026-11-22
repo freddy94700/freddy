@@ -16,7 +16,8 @@ pratiquer l'anglais en parlant (ou en écrivant) avec un coach IA, avec correcti
 - 🌐 **Traduction en français** des réponses du coach (bouton FR)
 - 🎭 **Jeux de rôle** : entretien d'embauche, restaurant, aéroport, réunion pro — avec objectifs et validation d'étapes
 - 📈 **Progression** : score de maîtrise, série de jours, objectif hebdomadaire, graphique de tendance
-- 🎁 **Freemium** : 1 conversation gratuite par jour, Premium (démo) pour l'illimité
+- 🎁 **Mode full par défaut** : conversations illimitées (premium activé d'office ; le limiteur freemium n'est actif que si tu désactives premium dans les réglages)
+- 🌐 **Mode en ligne (LLM) prioritaire** : dès qu'une clé API est renseignée, le coach LLM est utilisé (badge 🟢 en ligne / ⚪ hors-ligne) avec repli automatique sur le moteur hors-ligne
 - 🤖 **Deux moteurs de coach** :
   - hors-ligne (règles intégrées, fonctionne sans clé API)
   - LLM via n'importe quel endpoint compatible OpenAI (clé stockée localement uniquement)

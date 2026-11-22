@@ -2,6 +2,7 @@ import { AppState, SessionRecord } from '../types'
 import { canStartSession, currentStreak, FREE_SESSIONS_PER_DAY, masteryScore, sessionsOn, weekProgress, WEEKLY_GOAL } from '../storage'
 import { SCENARIOS } from '../scenarios'
 import { TOPICS } from '../topics'
+import { isOnlineCoach } from '../coach'
 
 export interface SessionChoice {
   kind: 'topic' | 'scenario'
@@ -57,7 +58,12 @@ export default function Home({ state, onStart }: Props) {
           <div className="logo small">🗣️</div>
           <h1>SpeakPal</h1>
         </div>
-        <div className="level-badge">{state.profile?.level}</div>
+        <div className="header-badges">
+          <span className={`net ${isOnlineCoach(state.settings) ? 'on' : 'off'}`}>
+            {isOnlineCoach(state.settings) ? '🟢 LLM en ligne' : '⚪ hors-ligne'}
+          </span>
+          <span className="level-badge">{state.profile?.level}</span>
+        </div>
       </header>
 
       <div className="stats-row">
@@ -90,7 +96,7 @@ export default function Home({ state, onStart }: Props) {
       <div className={`free-card ${free ? 'ok' : 'used'}`}>
         {free
           ? state.premium
-            ? '⭐ Premium actif : conversations illimitées.'
+            ? '✅ Mode full : conversations illimitées, aucune limite.'
             : `🎁 Version gratuite : encore ${FREE_SESSIONS_PER_DAY - today} conversation aujourd'hui.`
           : '🎁 Ta conversation gratuite du jour est utilisée. Passe en Premium pour continuer !'}
       </div>

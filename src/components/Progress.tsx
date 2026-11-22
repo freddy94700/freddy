@@ -58,11 +58,14 @@ export default function Progress({ state, onChange, onBack, onReset }: Props) {
         <label>
           Mode du coach
           <select value={s.mode} onChange={(e) => setSettings({ mode: e.target.value as CoachMode })}>
+            <option value="llm">LLM en ligne (repli hors-ligne si pas de clé/erreur)</option>
             <option value="auto">Auto (API si clé fournie, sinon hors-ligne)</option>
             <option value="local">Hors-ligne (règles intégrées)</option>
-            <option value="llm">API LLM (OpenAI-compatible)</option>
           </select>
         </label>
+        {(s.mode === 'llm' || s.mode === 'auto') && !s.apiKey.trim() && (
+          <p className="hint">Aucune clé API renseignée : le coach hors-ligne est utilisé automatiquement. Ajoute une clé ci-dessous pour activer le mode en ligne (LLM).</p>
+        )}
         <label>
           Clé API (stockée localement, jamais envoyée ailleurs que vers le endpoint choisi)
           <input

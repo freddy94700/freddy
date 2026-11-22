@@ -100,7 +100,7 @@ export default function App() {
             onChange={update}
             onBack={() => setScreen('home')}
             onReset={() => {
-              const fresh = { ...state, sessions: [], premium: false, profile: state.profile }
+              const fresh = { ...state, sessions: [], premium: true, profile: state.profile }
               setState(fresh)
               saveState(fresh)
             }}

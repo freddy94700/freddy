@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { createCoach } from '../coach'
+import { createCoach, isOnlineCoach } from '../coach'
 import { recognitionSupported, speak, startRecognition, stopSpeaking, RecognitionHandle, ttsSupported } from '../speech'
 import { AppState, ChatMessage, SessionContext, SessionSummary, Settings } from '../types'
 import { CATEGORY_LABELS } from '../types'
@@ -143,6 +143,9 @@ export default function Conversation({ state, session, onEnd }: Props) {
         <div>
           <strong>{session.kind === 'scenario' ? '🎭' : '💬'} {session.label}</strong>
           <span className="timer">⏱ {fmt(elapsed)}</span>
+          <span className={`net ${isOnlineCoach(settings) ? 'on' : 'off'}`}>
+            {isOnlineCoach(settings) ? '🟢 Coach IA en ligne (LLM)' : '⚪ Coach hors-ligne'}
+          </span>
         </div>
         <div className="header-actions">
           <button className={`mini ${showFr ? 'on' : ''}`} onClick={() => setShowFr((v) => !v)} title="Traduction française">

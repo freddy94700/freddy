@@ -105,7 +105,7 @@ export interface AppState {
 
 export const DEFAULT_SETTINGS: Settings = {
   sound: true,
-  mode: 'auto',
+  mode: 'llm',
   apiKey: '',
   endpoint: 'https://api.openai.com/v1/chat/completions',
   model: 'gpt-4o-mini',

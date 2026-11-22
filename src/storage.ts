@@ -6,17 +6,17 @@ export function loadState(): AppState {
   try {
     const raw = localStorage.getItem(KEY)
     if (!raw) {
-      return { profile: null, premium: false, sessions: [], settings: { ...DEFAULT_SETTINGS } }
+      return { profile: null, premium: true, sessions: [], settings: { ...DEFAULT_SETTINGS } }
     }
     const parsed = JSON.parse(raw) as AppState
     return {
       profile: parsed.profile ?? null,
-      premium: parsed.premium ?? false,
+      premium: parsed.premium ?? true,
       sessions: parsed.sessions ?? [],
       settings: { ...DEFAULT_SETTINGS, ...(parsed.settings ?? {}) },
     }
   } catch {
-    return { profile: null, premium: false, sessions: [], settings: { ...DEFAULT_SETTINGS } }
+    return { profile: null, premium: true, sessions: [], settings: { ...DEFAULT_SETTINGS } }
   }
 }
 
