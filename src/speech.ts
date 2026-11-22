@@ -84,7 +84,7 @@ export function pickEnglishVoice(): SpeechSynthesisVoice | null {
   return preferred
 }
 
-export function speak(text: string, opts?: { rate?: number; onEnd?: () => void }): void {
+export function speak(text: string, opts?: { rate?: number; onStart?: () => void; onEnd?: () => void }): void {
   if (!('speechSynthesis' in window)) return
   window.speechSynthesis.cancel()
   const utter = new SpeechSynthesisUtterance(text)
@@ -92,6 +92,7 @@ export function speak(text: string, opts?: { rate?: number; onEnd?: () => void }
   utter.rate = opts?.rate ?? 0.95
   const voice = pickEnglishVoice()
   if (voice) utter.voice = voice
+  if (opts?.onStart) utter.onstart = opts.onStart
   if (opts?.onEnd) utter.onend = opts.onEnd
   window.speechSynthesis.speak(utter)
 }

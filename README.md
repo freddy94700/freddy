@@ -8,7 +8,8 @@ pratiquer l'anglais en parlant (ou en écrivant) avec un coach IA, avec correcti
 
 ## Fonctionnalités
 
-- 👤 **Coach personnage** : avatar homme/femme au choix (Léa 👩‍🏫 ou Marc 👨‍🏫), affiché dans la conversation ; le nom du personnage est utilisé par le coach (LLM et hors-ligne). Modifiable à tout moment dans Progression → Mon profil
+- 👤 **Coach personnage animé façon appel vidéo** : visage SVG original (aucun asset externe) avec lèvres synchronisées sur la voix (TTS), clignements des yeux, hochements, sourire quand ton score ≥ 80, badge « EN DIRECT » et égaliseur sonore pendant la parole. Léa 👩‍🏫 ou Marc 👨‍🏫, modifiable dans Progression → Mon profil. (Une vidéo photoréaliste nécessiterait un service externe type HeyGen/Synthesia — non inclus.)
+- 🧑‍🏫 Le nom du personnage est utilisé par le coach (LLM et hors-ligne)
 - ✏️ **Niveau modifiable** : A1–C2, ajustable à tout moment dans Progression → Mon profil
 - 💬 **Conversation avec un coach IA** : sujets personnalisés selon le niveau (A1–C2) et les centres d'intérêt
 - 🎤 **Entrée vocale** (Web Speech API, `en-US`) et 🔊 **réponse vocale** (synthèse vocale)

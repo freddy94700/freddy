@@ -88,11 +88,15 @@ export interface Avatar {
   name: string
   emoji: string
   color: string
+  skin: string
+  hair: string
+  hairStyle: 'long' | 'short'
+  shirt: string
 }
 
 export const AVATARS: Avatar[] = [
-  { id: 'female', name: 'Léa', emoji: '👩‍🏫', color: '#ff8fb3' },
-  { id: 'male', name: 'Marc', emoji: '👨‍🏫', color: '#6c8cff' },
+  { id: 'female', name: 'Léa', emoji: '👩‍🏫', color: '#ff8fb3', skin: '#f2c9a0', hair: '#6b4226', hairStyle: 'long', shirt: '#e56b9a' },
+  { id: 'male', name: 'Marc', emoji: '👨‍🏫', color: '#6c8cff', skin: '#e8b98a', hair: '#2f2a26', hairStyle: 'short', shirt: '#4a6fd4' },
 ]
 
 export function avatarOf(id: AvatarId | undefined): Avatar {
